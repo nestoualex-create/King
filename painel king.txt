@@ -1,0 +1,563 @@
+-- ============================================================
+-- KING CHEAT v6 | RAYFIELD + TUDO CORRIGIDO
+-- ============================================================
+
+local Players = game:GetService("Players")
+local RunService = game:GetService("RunService")
+local UserInputService = game:GetService("UserInputService")
+local TweenService = game:GetService("TweenService")
+local LocalPlayer = Players.LocalPlayer
+local PlayerGui = LocalPlayer:WaitForChild("PlayerGui")
+
+-- ============================================================
+-- KEYS VÁLIDAS
+-- ============================================================
+local ValidKeys = {
+    ["KEY-001-RP"] = true,
+    ["KEY-069-RP"] = true,
+    ["KEY-420-RP"] = true,
+    ["KEY-777-RP"] = true,
+    ["KEY-999-RP"] = true,
+}
+
+-- ============================================================
+-- TELA DE KEY
+-- ============================================================
+local function criarKeySystem(callback)
+    local gui = Instance.new("ScreenGui")
+    gui.Name = "KingKey"
+    gui.ResetOnSpawn = false
+    gui.IgnoreGuiInset = true
+    gui.DisplayOrder = 1000
+    gui.Parent = PlayerGui
+
+    local bgFrame = Instance.new("Frame")
+    bgFrame.Size = UDim2.new(1, 0, 1, 0)
+    bgFrame.BackgroundColor3 = Color3.fromRGB(0, 0, 0)
+    bgFrame.BackgroundTransparency = 0.3
+    bgFrame.BorderSizePixel = 0
+    bgFrame.ZIndex = 1
+    bgFrame.Parent = gui
+
+    local mainFrame = Instance.new("Frame")
+    mainFrame.Size = UDim2.new(0, 280, 0, 160)
+    mainFrame.Position = UDim2.new(0.5, -140, 0.5, -80)
+    mainFrame.BackgroundColor3 = Color3.fromRGB(8, 8, 10)
+    mainFrame.BorderSizePixel = 0
+    mainFrame.Active = true
+    mainFrame.ZIndex = 2
+    mainFrame.Parent = gui
+    Instance.new("UICorner", mainFrame).CornerRadius = UDim.new(0, 12)
+
+    local stroke = Instance.new("UIStroke", mainFrame)
+    stroke.Color = Color3.fromRGB(200, 0, 0)
+    stroke.Thickness = 2
+    stroke.Transparency = 0.2
+
+    local title = Instance.new("TextLabel")
+    title.Size = UDim2.new(1, -20, 0, 30)
+    title.Position = UDim2.new(0, 10, 0, 10)
+    title.BackgroundTransparency = 1
+    title.Text = "KING CHEAT"
+    title.TextColor3 = Color3.fromRGB(200, 0, 0)
+    title.Font = Enum.Font.GothamBold
+    title.TextSize = 18
+    title.ZIndex = 3
+    title.Parent = mainFrame
+
+    local sub = Instance.new("TextLabel")
+    sub.Size = UDim2.new(1, -20, 0, 18)
+    sub.Position = UDim2.new(0, 10, 0, 40)
+    sub.BackgroundTransparency = 1
+    sub.Text = "Roleplay • Premium v6"
+    sub.TextColor3 = Color3.fromRGB(150, 150, 160)
+    sub.Font = Enum.Font.Gotham
+    sub.TextSize = 11
+    sub.ZIndex = 3
+    sub.Parent = mainFrame
+
+    local input = Instance.new("TextBox")
+    input.Size = UDim2.new(1, -40, 0, 32)
+    input.Position = UDim2.new(0, 20, 0, 65)
+    input.BackgroundColor3 = Color3.fromRGB(20, 20, 25)
+    input.BorderSizePixel = 0
+    input.Text = ""
+    input.PlaceholderText = "Digite a key..."
+    input.PlaceholderColor3 = Color3.fromRGB(80, 80, 90)
+    input.TextColor3 = Color3.fromRGB(255, 255, 255)
+    input.Font = Enum.Font.Gotham
+    input.TextSize = 12
+    input.ZIndex = 3
+    input.Parent = mainFrame
+    Instance.new("UICorner", input).CornerRadius = UDim.new(0, 6)
+    local inputStroke = Instance.new("UIStroke", input)
+    inputStroke.Color = Color3.fromRGB(200, 0, 0)
+    inputStroke.Thickness = 1.5
+
+    local btn = Instance.new("TextButton")
+    btn.Size = UDim2.new(1, -40, 0, 32)
+    btn.Position = UDim2.new(0, 20, 0, 110)
+    btn.BackgroundColor3 = Color3.fromRGB(200, 0, 0)
+    btn.Text = "ENTRAR"
+    btn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    btn.Font = Enum.Font.GothamBold
+    btn.TextSize = 12
+    btn.BorderSizePixel = 0
+    btn.ZIndex = 3
+    btn.Parent = mainFrame
+    Instance.new("UICorner", btn).CornerRadius = UDim.new(0, 6)
+
+    local msg = Instance.new("TextLabel")
+    msg.Size = UDim2.new(1, -20, 0, 16)
+    msg.Position = UDim2.new(0, 10, 0, 145)
+    msg.BackgroundTransparency = 1
+    msg.Text = ""
+    msg.TextColor3 = Color3.fromRGB(200, 0, 0)
+    msg.Font = Enum.Font.Gotham
+    msg.TextSize = 10
+    msg.ZIndex = 3
+    msg.Parent = mainFrame
+
+    local closeBtn = Instance.new("TextButton")
+    closeBtn.Size = UDim2.new(0, 20, 0, 20)
+    closeBtn.Position = UDim2.new(1, -26, 1, -26)
+    closeBtn.BackgroundColor3 = Color3.fromRGB(60, 0, 0)
+    closeBtn.Text = "X"
+    closeBtn.TextColor3 = Color3.fromRGB(255, 255, 255)
+    closeBtn.Font = Enum.Font.GothamBold
+    closeBtn.TextSize = 10
+    closeBtn.BorderSizePixel = 0
+    closeBtn.ZIndex = 4
+    closeBtn.Parent = mainFrame
+    Instance.new("UICorner", closeBtn).CornerRadius = UDim.new(0, 4)
+
+    closeBtn.MouseButton1Click:Connect(function()
+        gui:Destroy()
+    end)
+
+    local dragging, dragStart, startPos
+    title.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = true
+            dragStart = input.Position
+            startPos = mainFrame.Position
+        end
+    end)
+    UserInputService.InputChanged:Connect(function(input)
+        if dragging and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local d = input.Position - dragStart
+            mainFrame.Position = UDim2.new(startPos.X.Scale, startPos.X.Offset + d.X, startPos.Y.Scale, startPos.Y.Offset + d.Y)
+        end
+    end)
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            dragging = false
+        end
+    end)
+
+    local resizing, resizeStart, resizeSize
+    closeBtn.InputBegan:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            resizing = true
+            resizeStart = input.Position
+            resizeSize = mainFrame.Size
+        end
+    end)
+    UserInputService.InputChanged:Connect(function(input)
+        if resizing and (input.UserInputType == Enum.UserInputType.MouseMovement or input.UserInputType == Enum.UserInputType.Touch) then
+            local d = input.Position - resizeStart
+            local newW = math.max(240, resizeSize.X.Offset + d.X)
+            local newH = math.max(140, resizeSize.Y.Offset + d.Y)
+            mainFrame.Size = UDim2.new(0, newW, 0, newH)
+        end
+    end)
+    UserInputService.InputEnded:Connect(function(input)
+        if input.UserInputType == Enum.UserInputType.MouseButton1 or input.UserInputType == Enum.UserInputType.Touch then
+            resizing = false
+        end
+    end)
+
+    local function shake()
+        local orig = mainFrame.Position
+        for i = 1, 6 do
+            mainFrame.Position = orig + UDim2.new(0, (i % 2 == 0) and 8 or -8, 0, 0)
+            task.wait(0.03)
+        end
+        mainFrame.Position = orig
+    end
+
+    btn.MouseButton1Click:Connect(function()
+        if ValidKeys[input.Text] then
+            TweenService:Create(mainFrame, TweenInfo.new(0.3), {
+                Size = UDim2.new(0, 0, 0, 0),
+                Position = UDim2.new(0.5, 0, 0.5, 0),
+                BackgroundTransparency = 1,
+            }):Play()
+            TweenService:Create(bgFrame, TweenInfo.new(0.3), {BackgroundTransparency = 1}):Play()
+            task.wait(0.35)
+            gui:Destroy()
+            callback()
+        else
+            msg.Text = "❌ Key inválida!"
+            shake()
+            task.wait(1.5)
+            msg.Text = ""
+        end
+    end)
+end
+
+-- ============================================================
+-- INTERFACE PRINCIPAL (RAYFIELD)
+-- ============================================================
+local function criarInterface()
+    local Rayfield = loadstring(game:HttpGet('https://sirius.menu/rayfield'))()
+
+    local Window = Rayfield:CreateWindow({
+        Name = "KING CHEAT | SINTONIA RP",
+        LoadingTitle = "Carregando...",
+        LoadingSubtitle = "v6.0",
+        ConfigurationSaving = { Enabled = false },
+        KeySystem = false,
+        Theme = "Dark",
+    })
+
+    local Config = {
+        Aimbot = false, AimbotFOV = 150,
+        AuraAlgemas = false,
+        NoRecoil = false, InfiniteAmmo = false, NoCooldown = false,
+        ESP_Box = false, ESP_Line = false, ESP_Health = false, ESP_Name = false,
+        InfJump = false, Speed = false, SpeedValue = 50, SafeSpeed = false,
+        AntiRagdoll = false, AntiStun = false,
+        NickRGB = false, ScriptRGB = false,
+        AutoPesca = false, AutoEssencia = false,
+    }
+
+    -- ============================================
+    -- ABA AIMBOT
+    -- ============================================
+    local AimTab = Window:CreateTab("Aimbot", 4483362458)
+
+    AimTab:CreateToggle({
+        Name = "Aimbot",
+        CurrentValue = false,
+        Flag = "Aimbot",
+        Callback = function(v) Config.Aimbot = v end,
+    })
+
+    AimTab:CreateSlider({
+        Name = "Aimbot FOV",
+        Range = {50, 500},
+        Increment = 5,
+        Suffix = "studs",
+        CurrentValue = 150,
+        Flag = "AimbotFOV",
+        Callback = function(v) Config.AimbotFOV = v end,
+    })
+
+    AimTab:CreateToggle({
+        Name = "Aura Algemas (Automático)",
+        CurrentValue = false,
+        Flag = "AuraAlgemas",
+        Callback = function(v) Config.AuraAlgemas = v end,
+    })
+
+    AimTab:CreateLabel("⚠️ Aura Algemas: precisa ter algema na mão. O script tenta usar quando perto de alguém.")
+
+    -- ============================================
+    -- ABA ESP
+    -- ============================================
+    local ESPTab = Window:CreateTab("ESP", 4483362458)
+
+    ESPTab:CreateToggle({
+        Name = "ESP Box",
+        CurrentValue = false,
+        Flag = "ESP_Box",
+        Callback = function(v) Config.ESP_Box = v end,
+    })
+
+    ESPTab:CreateToggle({
+        Name = "ESP Linha (Tronco → Centro Inferior)",
+        CurrentValue = false,
+        Flag = "ESP_Line",
+        Callback = function(v) Config.ESP_Line = v end,
+    })
+
+    ESPTab:CreateToggle({
+        Name = "ESP Vida (Barra Lateral Fixa)",
+        CurrentValue = false,
+        Flag = "ESP_Health",
+        Callback = function(v) Config.ESP_Health = v end,
+    })
+
+    ESPTab:CreateToggle({
+        Name = "ESP Nome",
+        CurrentValue = false,
+        Flag = "ESP_Name",
+        Callback = function(v) Config.ESP_Name = v end,
+    })
+
+    -- ============================================
+    -- ABA PLAYER
+    -- ============================================
+    local PlayerTab = Window:CreateTab("Player", 4483362458)
+
+    PlayerTab:CreateToggle({
+        Name = "Infinite Jump",
+        CurrentValue = false,
+        Flag = "InfJump",
+        Callback = function(v) Config.InfJump = v end,
+    })
+
+    PlayerTab:CreateToggle({
+        Name = "Speed",
+        CurrentValue = false,
+        Flag = "Speed",
+        Callback = function(v) Config.Speed = v end,
+    })
+
+    PlayerTab:CreateSlider({
+        Name = "Speed Value",
+        Range = {16, 500},
+        Increment = 5,
+        Suffix = "studs/s",
+        CurrentValue = 50,
+        Flag = "SpeedValue",
+        Callback = function(v) Config.SpeedValue = v end,
+    })
+
+    PlayerTab:CreateToggle({
+        Name = "Speed Seguro (Anti-Kick)",
+        CurrentValue = false,
+        Flag = "SafeSpeed",
+        Callback = function(v) Config.SafeSpeed = v end,
+    })
+
+    PlayerTab:CreateLabel("⚠️ Speed Seguro: usa velocidade moderada (25-35) para não kickar.")
+
+    PlayerTab:CreateToggle({
+        Name = "Anti-Ragdoll",
+        CurrentValue = false,
+        Flag = "AntiRagdoll",
+        Callback = function(v) Config.AntiRagdoll = v end,
+    })
+
+    PlayerTab:CreateToggle({
+        Name = "Anti-Stun",
+        CurrentValue = false,
+        Flag = "AntiStun",
+        Callback = function(v) Config.AntiStun = v end,
+    })
+
+    PlayerTab:CreateSection("RGB NAMES")
+
+    PlayerTab:CreateToggle({
+        Name = "Exibir Nick RGB",
+        CurrentValue = false,
+        Flag = "NickRGB",
+        Callback = function(v) Config.NickRGB = v end,
+    })
+
+    PlayerTab:CreateToggle({
+        Name = "Exibir Nome Script RGB",
+        CurrentValue = false,
+        Flag = "ScriptRGB",
+        Callback = function(v) Config.ScriptRGB = v end,
+    })
+
+    -- ============================================
+    -- ABA AUTO FARM
+    -- ============================================
+    local AutoTab = Window:CreateTab("Auto Farm", 4483362458)
+
+    AutoTab:CreateLabel("📖 AUTO PESCA: Vá até o local e ative.")
+
+    AutoTab:CreateToggle({
+        Name = "Auto Pesca (Manual)",
+        CurrentValue = false,
+        Flag = "AutoPesca",
+        Callback = function(v)
+            Config.AutoPesca = v
+            if v then
+                task.spawn(function()
+                    while Config.AutoPesca do
+                        pcall(function()
+                            for _, obj in ipairs(workspace:GetDescendants()) do
+                                if obj:IsA("ProximityPrompt") and obj.Enabled then
+                                    local act = (obj.ActionText or ""):lower()
+                                    if act:find("pesc") or act:find("fish") then
+                                        fireproximityprompt(obj)
+                                    end
+                                end
+                            end
+                        end)
+                        task.wait(2)
+                    end
+                end)
+            end
+        end,
+    })
+
+    AutoTab:CreateToggle({
+        Name = "Auto Essência",
+        CurrentValue = false,
+        Flag = "AutoEssencia",
+        Callback = function(v)
+            Config.AutoEssencia = v
+            if v then
+                task.spawn(function()
+                    while Config.AutoEssencia do
+                        pcall(function()
+                            for _, obj in ipairs(workspace:GetDescendants()) do
+                                if obj:IsA("ProximityPrompt") and obj.Enabled then
+                                    local act = (obj.ActionText or ""):lower()
+                                    if act:find("pegar") or act:find("essência") or act:find("coletar") then
+                                        fireproximityprompt(obj)
+                                    end
+                                end
+                            end
+                        end)
+                        task.wait(1)
+                    end
+                end)
+            end
+        end,
+    })
+
+    -- ============================================
+    -- LÓGICA: AIMBOT + FOV VISÍVEL
+    -- ============================================
+    local function getTarget()
+        local cam = workspace.CurrentCamera
+        if not cam then return nil end
+        local closest, shortest = nil, Config.AimbotFOV
+        local center = Vector2.new(cam.ViewportSize.X / 2, cam.ViewportSize.Y / 2)
+        for _, plr in ipairs(Players:GetPlayers()) do
+            if plr ~= LocalPlayer then
+                local char = plr.Character
+                if char then
+                    local hum = char:FindFirstChildOfClass("Humanoid")
+                    if hum and hum.Health > 0 then
+                        local part = char:FindFirstChild("Head")
+                        if part then
+                            local sp, on = cam:WorldToViewportPoint(part.Position)
+                            if on then
+                                local d = (Vector2.new(sp.X, sp.Y) - center).Magnitude
+                                if d < shortest then shortest = d; closest = part end
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        return closest
+    end
+
+    RunService.RenderStepped:Connect(function()
+        if not Config.Aimbot then return end
+        local cam = workspace.CurrentCamera
+        if not cam then return end
+        local t = getTarget()
+        if t then
+            pcall(function()
+                cam.CFrame = cam.CFrame:Lerp(CFrame.new(cam.CFrame.Position, t.Position), 0.2)
+            end)
+        end
+    end)
+
+    -- FOV VISÍVEL (círculo)
+    local fovGui = Instance.new("ScreenGui")
+    fovGui.Name = "KingFOV"
+    fovGui.ResetOnSpawn = false
+    fovGui.IgnoreGuiInset = true
+    fovGui.Parent = PlayerGui
+
+    local fovCircle = Instance.new("Frame")
+    fovCircle.AnchorPoint = Vector2.new(0.5, 0.5)
+    fovCircle.Position = UDim2.new(0.5, 0, 0.5, 0)
+    fovCircle.Size = UDim2.new(0, 300, 0, 300)
+    fovCircle.BackgroundTransparency = 1
+    fovCircle.BorderSizePixel = 0
+    fovCircle.Visible = false
+    Instance.new("UICorner", fovCircle).CornerRadius = UDim.new(1, 0)
+
+    local fovStroke = Instance.new("UIStroke", fovCircle)
+    fovStroke.Color = Color3.fromRGB(200, 0, 0)
+    fovStroke.Thickness = 2
+    fovStroke.Transparency = 0.3
+
+    RunService.RenderStepped:Connect(function()
+        if Config.Aimbot then
+            fovCircle.Visible = true
+            local size = Config.AimbotFOV * 2
+            fovCircle.Size = UDim2.new(0, size, 0, size)
+            fovStroke.Color = Color3.fromRGB(200, 0, 0)
+        else
+            fovCircle.Visible = false
+        end
+    end)
+
+    -- ============================================
+    -- LÓGICA: ESP (TRONCO → CENTRO INFERIOR, SEM TRAVAR)
+    -- ============================================
+    local espGui = Instance.new("ScreenGui")
+    espGui.Name = "KingESP"
+    espGui.ResetOnSpawn = false
+    espGui.IgnoreGuiInset = true
+    espGui.Parent = PlayerGui
+
+    local espData = {}
+
+    local function clearPlayer(plr)
+        if espData[plr] then
+            for _, obj in pairs(espData[plr]) do
+                pcall(function() obj:Destroy() end)
+            end
+            espData[plr] = nil
+        end
+    end
+
+    Players.PlayerRemoving:Connect(clearPlayer)
+
+    RunService.RenderStepped:Connect(function()
+        local cam = workspace.CurrentCamera
+        if not cam then return end
+
+        if not (Config.ESP_Box or Config.ESP_Line or Config.ESP_Health or Config.ESP_Name) then
+            for plr, _ in pairs(espData) do clearPlayer(plr) end
+            return
+        end
+
+        for plr, _ in pairs(espData) do
+            if not plr.Parent then clearPlayer(plr) end
+        end
+
+        for _, plr in ipairs(Players:GetPlayers()) do
+            if plr ~= LocalPlayer then
+                local char = plr.Character
+                local hum = char and char:FindFirstChildOfClass("Humanoid")
+                local hrp = char and char:FindFirstChild("HumanoidRootPart")
+                local head = char and char:FindFirstChild("Head")
+                local torso = char and (char:FindFirstChild("UpperTorso") or char:FindFirstChild("Torso"))
+
+                if not char or not hum or not hrp or not head or not torso or hum.Health <= 0 then
+                    clearPlayer(plr)
+                else
+                    espData[plr] = espData[plr] or {}
+                    local headPos, onHead = cam:WorldToViewportPoint(head.Position + Vector3.new(0, 0.5, 0))
+                    local torsoPos, onTorso = cam:WorldToViewportPoint(torso.Position)
+                    local feetPos, onFeet = cam:WorldToViewportPoint(hrp.Position - Vector3.new(0, 3, 0))
+
+                    if onHead and onFeet then
+                        local bh = math.abs(headPos.Y - feetPos.Y)
+                        local bw = bh * 0.55
+                        local bx = headPos.X - bw/2
+                        local by = headPos.Y
+
+                        -- BOX
+                        if Config.ESP_Box then
+                            if not espData[plr].Box then
+                                local f = Instance.new("Frame")
+                                f.Parent = espGui
+                                f.BackgroundTransparency = 1
+                                f.BorderSizePixel = 0
+                                local s = Instance.new("U
